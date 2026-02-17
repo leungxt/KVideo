@@ -47,12 +47,9 @@ export function DesktopMoreMenu({
         setAdFilterMode,
         fullscreenType,
         setFullscreenType,
+        danmakuEnabled,
+        setDanmakuEnabled,
         danmakuApiUrl,
-        setDanmakuApiUrl,
-        danmakuOpacity,
-        setDanmakuOpacity,
-        danmakuFontSize,
-        setDanmakuFontSize,
     } = usePlayerSettings();
 
     const buttonRef = React.useRef<HTMLButtonElement>(null);
@@ -367,57 +364,31 @@ export function DesktopMoreMenu({
             {/* Divider */}
             <div className="h-px bg-[var(--glass-border)] my-1.5 sm:my-2" />
 
-            {/* Danmaku API URL */}
-            <div className={`${isRotated ? 'px-2 py-1.5' : 'px-3 py-2 sm:px-4 sm:py-2.5'}`}>
-                <div className={`flex items-center gap-2 text-[var(--text-color)] ${isRotated ? 'text-[11px]' : 'text-xs sm:text-sm'} mb-1.5`}>
-                    <Icons.Danmaku size={isRotated ? 14 : 16} className="sm:w-[18px] sm:h-[18px]" />
-                    <span>弹幕 API</span>
-                </div>
-                <input
-                    type="text"
-                    placeholder="https://example.com"
-                    value={danmakuApiUrl}
-                    onChange={(e) => setDanmakuApiUrl(e.target.value)}
-                    className={`w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-[var(--radius-2xl)] text-[var(--text-color)] placeholder:text-[var(--text-color-secondary)]/50 focus:outline-none focus:border-[var(--accent-color)] ${isRotated ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm'}`}
-                    onClick={(e) => e.stopPropagation()}
-                />
-            </div>
-
-            {/* Danmaku Opacity Slider */}
-            <div className={`${isRotated ? 'px-2 py-1.5' : 'px-3 py-2 sm:px-4 sm:py-2.5'} flex items-center justify-between gap-3`}>
-                <div className={`flex items-center gap-2 text-[var(--text-color)] ${isRotated ? 'text-[11px]' : 'text-xs sm:text-sm'} whitespace-nowrap`}>
-                    <span>透明度</span>
-                </div>
-                <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <input
-                        type="range"
-                        min="10"
-                        max="100"
-                        value={Math.round(danmakuOpacity * 100)}
-                        onChange={(e) => setDanmakuOpacity(parseInt(e.target.value) / 100)}
-                        className={`flex-1 accent-[var(--accent-color)] ${isRotated ? 'h-1' : 'h-1.5'}`}
-                        onClick={(e) => e.stopPropagation()}
-                    />
-                    <span className={`text-[var(--text-color-secondary)] ${isRotated ? 'text-[9px]' : 'text-[10px] sm:text-xs'} w-7 text-right`}>
-                        {Math.round(danmakuOpacity * 100)}%
-                    </span>
-                </div>
-            </div>
-
-            {/* Danmaku Font Size */}
+            {/* Danmaku Toggle */}
             <div className={`${isRotated ? 'px-2 py-1.5' : 'px-3 py-2 sm:px-4 sm:py-2.5'} flex items-center justify-between gap-4`}>
-                <div className={`flex items-center gap-2 text-[var(--text-color)] ${isRotated ? 'text-[11px]' : 'text-xs sm:text-sm'}`}>
-                    <span>字号</span>
+                <div className={`flex items-center gap-2 ${!danmakuApiUrl ? 'text-[var(--text-color-secondary)]' : 'text-[var(--text-color)]'} ${isRotated ? 'text-[11px]' : 'text-xs sm:text-sm'}`}>
+                    <Icons.Danmaku size={isRotated ? 14 : 16} className="sm:w-[18px] sm:h-[18px]" />
+                    <span>弹幕</span>
+                    {!danmakuApiUrl && (
+                        <span className={`${isRotated ? 'text-[9px]' : 'text-[10px] sm:text-xs'} text-[var(--text-color-secondary)]`}>(未配置)</span>
+                    )}
                 </div>
                 <button
-                    onClick={() => {
-                        const sizes = [14, 18, 20, 24, 28];
-                        const idx = sizes.indexOf(danmakuFontSize);
-                        setDanmakuFontSize(sizes[(idx + 1) % sizes.length]);
-                    }}
-                    className={`flex items-center gap-1 bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-color)] rounded-[var(--radius-2xl)] outline-none hover:border-[var(--accent-color)] hover:bg-[color-mix(in_srgb,var(--accent-color)_5%,transparent)] transition-all cursor-pointer whitespace-nowrap ${isRotated ? 'px-1.5 py-0.5 text-[9px]' : 'px-2 sm:px-2.5 py-1 sm:py-1.5 text-[10px] sm:text-xs'}`}
+                    onClick={() => danmakuApiUrl && setDanmakuEnabled(!danmakuEnabled)}
+                    disabled={!danmakuApiUrl}
+                    className={`relative rounded-full transition-all duration-300 flex-shrink-0 border border-white/20 ${!danmakuApiUrl
+                        ? 'bg-white/5 opacity-40 cursor-not-allowed'
+                        : danmakuEnabled
+                            ? 'bg-[var(--accent-color)] shadow-[0_0_15px_rgba(var(--accent-color-rgb),0.6)] cursor-pointer'
+                            : 'bg-white/5 hover:bg-white/10 cursor-pointer'
+                        } ${isRotated ? 'w-6 h-3.5' : 'w-8 h-[18px] sm:w-10 sm:h-6'}`}
+                    aria-checked={danmakuEnabled}
+                    role="switch"
                 >
-                    <span>{danmakuFontSize}px</span>
+                    <span
+                        className={`absolute top-0.5 left-0.5 bg-white rounded-full transition-transform duration-300 shadow-[0_2px_4px_rgba(0,0,0,0.4)] ${isRotated ? 'w-2.5 h-2.5' : 'w-3.5 h-3.5 sm:w-4.5 sm:h-4.5'} ${danmakuEnabled && danmakuApiUrl ? (isRotated ? 'translate-x-2.5' : 'translate-x-3.5 sm:translate-x-4.5') : 'translate-x-0'
+                            }`}
+                    />
                 </button>
             </div>
 

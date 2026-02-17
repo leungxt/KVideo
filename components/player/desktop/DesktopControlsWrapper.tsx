@@ -9,11 +9,9 @@ interface DesktopControlsWrapperProps {
     actions: ReturnType<typeof useDesktopPlayerState>['actions'];
     logic: ReturnType<typeof useDesktopPlayerLogic>;
     refs: ReturnType<typeof useDesktopPlayerState>['refs'];
-    danmakuEnabled?: boolean;
-    onToggleDanmaku?: () => void;
 }
 
-export function DesktopControlsWrapper({ src, data, actions, logic, refs, danmakuEnabled, onToggleDanmaku }: DesktopControlsWrapperProps) {
+export function DesktopControlsWrapper({ src, data, actions, logic, refs }: DesktopControlsWrapperProps) {
     const {
         isPlaying,
         currentTime,
@@ -78,8 +76,6 @@ export function DesktopControlsWrapper({ src, data, actions, logic, refs, danmak
             onProgressMouseDown={handleProgressMouseDown}
             onProgressTouchStart={handleProgressTouchStart}
             formatTime={formatTime}
-            danmakuEnabled={danmakuEnabled}
-            onToggleDanmaku={onToggleDanmaku}
         />
     );
 }

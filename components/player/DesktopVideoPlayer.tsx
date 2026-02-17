@@ -278,8 +278,6 @@ export function DesktopVideoPlayer({
             actions={actions}
             logic={logic}
             refs={refs}
-            danmakuEnabled={danmakuEnabled}
-            onToggleDanmaku={() => setDanmakuEnabled(!danmakuEnabled)}
           />
         </div>
       </div>

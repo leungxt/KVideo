@@ -111,6 +111,15 @@
 - **自定义关键词**：支持通过环境变量或文件扩展过滤关键词
 - **高性能**：基于流式处理，对播放加载速度几乎无影响
 
+### 弹幕 (Danmaku)
+
+- **弹幕聚合**：接入自建弹幕聚合 API（兼容 [danmu_api](https://github.com/huangxd-/danmu_api) 格式），自动匹配当前播放内容
+- **Canvas 渲染**：基于 Canvas 的高性能弹幕渲染，支持数百条弹幕同时滚动，不影响播放交互
+- **滚动/顶部/底部弹幕**：支持三种弹幕类型，自动分配轨道防止重叠
+- **自定义显示**：可调节弹幕透明度（10%-100%）和字号（14/18/20/24/28px）
+- **播放器联动**：暂停时弹幕冻结，跳转时自动清除，全屏模式下正常显示
+- **环境变量预设**：可通过 `NEXT_PUBLIC_DANMAKU_API_URL` 为所有用户预设弹幕 API 地址
+
 ### 数据管理
 
 - **设置导出/导入**：支持将所有设置导出为 JSON 文件，方便备份和迁移
@@ -272,6 +281,27 @@ docker run -d -p 3000:3000 \
   --name kvideo kuekhaoyang/kvideo:latest
 ```
 
+## 弹幕 API 配置
+
+通过环境变量预设弹幕聚合 API 地址，用户无需手动配置即可使用弹幕功能。
+
+| 变量名 | 说明 | 默认值 |
+|--------|------|--------|
+| `NEXT_PUBLIC_DANMAKU_API_URL` | 弹幕聚合 API 地址 | - |
+
+需要自建或使用兼容 [danmu_api](https://github.com/huangxd-/danmu_api) 格式的弹幕聚合服务。
+
+**示例：**
+
+```bash
+# Docker
+docker run -d -p 3000:3000 \
+  -e NEXT_PUBLIC_DANMAKU_API_URL="https://your-danmu-api.example.com" \
+  --name kvideo kuekhaoyang/kvideo:latest
+```
+
+设置后用户在播放器菜单中即可直接开启弹幕，也可在设置页面中覆盖此地址。
+
 ## 自定义源 JSON 格式
 
 如果你想创建自己的订阅源或批量导入源，可以使用以下 JSON 格式。
@@ -346,6 +376,7 @@ docker run -d -p 3000:3000 \
 | `NEXT_PUBLIC_SUBSCRIPTION_SOURCES` | 自动订阅源配置（客户端） | - |
 | `AD_KEYWORDS` / `NEXT_PUBLIC_AD_KEYWORDS` | 广告过滤关键词 | - |
 | `AD_KEYWORDS_FILE` | 广告关键词文件路径 | - |
+| `NEXT_PUBLIC_DANMAKU_API_URL` | 弹幕聚合 API 地址 | - |
 
 ## 技术栈
 

@@ -123,7 +123,7 @@ function getDefaultAppSettings(): AppSettings {
     proxyMode: 'retry',
     rememberScrollPosition: true,
     danmakuEnabled: false,
-    danmakuApiUrl: '',
+    danmakuApiUrl: process.env.NEXT_PUBLIC_DANMAKU_API_URL || '',
     danmakuOpacity: 0.7,
     danmakuFontSize: 20,
   };
@@ -203,7 +203,7 @@ export const settingsStore = {
         proxyMode: (parsed.proxyMode === 'retry' || parsed.proxyMode === 'none' || parsed.proxyMode === 'always') ? parsed.proxyMode : 'retry',
         rememberScrollPosition: parsed.rememberScrollPosition !== undefined ? parsed.rememberScrollPosition : true,
         danmakuEnabled: parsed.danmakuEnabled !== undefined ? parsed.danmakuEnabled : false,
-        danmakuApiUrl: typeof parsed.danmakuApiUrl === 'string' ? parsed.danmakuApiUrl : '',
+        danmakuApiUrl: typeof parsed.danmakuApiUrl === 'string' ? (parsed.danmakuApiUrl || process.env.NEXT_PUBLIC_DANMAKU_API_URL || '') : (process.env.NEXT_PUBLIC_DANMAKU_API_URL || ''),
         danmakuOpacity: typeof parsed.danmakuOpacity === 'number' ? parsed.danmakuOpacity : 0.7,
         danmakuFontSize: typeof parsed.danmakuFontSize === 'number' ? parsed.danmakuFontSize : 20,
       };
